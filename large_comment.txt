@@ -1,0 +1,27 @@
+AREA PROG1, CODE, READONLY	; Define a code section named PROG1 with read-only permission
+ENTRY				; Mark the start of the code execution
+
+LDR R3, = data1			; Load the address of data1 into R3
+LDR R4, = 0x05			; Load the decimal value 5 into R4
+LDR R5, [R3], #04		; Load the first 32-bit word from the memory location pointed to by R3 and increment R3 by 4
+				; The value in R5 is now the first element of data1
+SUB R4, R4, #01		; Decrement R4 by 1
+
+MOV R7, #00			; Move the value 0 into R7
+L1				; Define a label L1 for the loop
+
+LDR R1, [R3], #04		; Load the next 32-bit word from the memory location pointed to by R3 and increment R3 by 4
+CMP R1, R5			; Compare the value in R1 with R5
+BHS L2				; Branch to L2 if R1 is greater than or equal to R5
+MOVS R1, R5			; Move the value in R5 to R1 if it is greater than R1
+
+L2				; Define a label L2
+SUBS R4, R4, #01		; Decrement R4 by 1
+BNE L1				; Branch to L1 if R4 is not equal to 0
+
+STOP    B STOP			; Stop execution of the program
+
+AREA PROG1, DATA, READWRITE	; Define a data section named PROG1 with read-write permission
+
+data1	DCD 0x05, 0x03, 0x08, 0x04, 0x01	; Define an array of 32-bit words named data1 and initialize it with values
+END 				; End of the program
